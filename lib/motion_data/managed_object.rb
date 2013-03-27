@@ -127,6 +127,10 @@ module MotionData
       end
     end
 
+    def destroy
+      managedObjectContext.deleteObject(self)
+    end
+
     # Called from method that's dynamically added from
     # +[MotionDataManagedObjectBase defineRelationshipMethod:]
     def relationshipByName(name)

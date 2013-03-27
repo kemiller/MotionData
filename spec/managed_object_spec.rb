@@ -88,6 +88,20 @@ module MotionData
       end
     end
 
+    describe "destroying a model" do
+
+      it "registers deletion with the default context automatically" do
+        Author.new(:name => "eecummings")
+        authors = Author.where(:name => "eecummings").array
+        authors.size.should == 1
+        author = authors.first
+        author.destroy
+        Context.current.saveChanges
+        Author.where(:name => "eecummings").array.size.should == 0
+      end
+
+    end
+
     describe "scopes" do
       it "returns all entities of a managed object in the current context" do
         Author.all.to_a.should == []
