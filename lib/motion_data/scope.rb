@@ -2,7 +2,7 @@ module MotionData
   class Scope
     include Enumerable
 
-    attr_reader :target, :predicate, :sortDescriptors
+    attr_reader :target, :predicate, :sortDescriptors, :fetchLimit
 
     def self.new
       alloc.initWithTarget(nil)
@@ -59,6 +59,11 @@ module MotionData
     # Sort by a key-path.
     def sortBy(keyPath, ascending:ascending)
       scopeByAddingSortDescriptor(NSSortDescriptor.alloc.initWithKey(keyPath.to_s, ascending:ascending))
+    end
+
+    def limit(fetchLimit)
+      @fetchLimit = fetchLimit
+      self
     end
 
     # Iterates over the array representation of the scope.
@@ -203,6 +208,7 @@ module MotionData
         request = NSFetchRequest.new
         request.entity = targetClass.entityDescription
         request.predicate = predicate
+        request.fetchLimit = fetchLimit if fetchLimit
         request.sortDescriptors = @sortDescriptors unless @sortDescriptors.empty?
         request
       end
@@ -266,6 +272,7 @@ module MotionData
         request.entity = @target.entityDescription
         request.predicate = @predicate
         request.sortDescriptors = @sortDescriptors unless @sortDescriptors.empty?
+        request.fetchLimit = fetchLimit if fetchLimit
         request
       end
 

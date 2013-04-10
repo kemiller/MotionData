@@ -148,6 +148,7 @@ module MotionData
       scope4.object_id.should.not == scope3.object_id
       scope4.sortDescriptors.size.should == scope3.sortDescriptors.size + 1
     end
+
   end
 
   shared "Scope::Set#set" do
@@ -259,6 +260,15 @@ module MotionData
       request.predicate.predicateFormat.should == predicate.predicateFormat
     end
 
+    it "respects limits and offsets" do
+      @articles.limit(1)
+      @articles.offset(1)
+      request = @articles.fetchRequest
+
+      request.fetchLimit.should == 1
+      request.fetchOffset.should == 1
+    end
+
     it "is able to use named scopes of the target model class" do
       @articles.published.should.be.instance_of Scope::Relationship
       @articles.published.target.should == @articles.target
@@ -294,6 +304,25 @@ module MotionData
       request.entity.should == Article.entityDescription
       request.sortDescriptors.should == scope.sortDescriptors
       request.predicate.predicateFormat.should == scope.predicate.predicateFormat
+    end
+
+    it "defaults to no limit" do
+      scope = Scope::Model.alloc.initWithTarget(Article)
+
+      request1 = scope.fetchRequest
+      request1.fetchLimit.should == 0
+    end
+
+    it "records limit and preserves it in the fetchRequest" do
+      scope = Scope::Model.alloc.initWithTarget(Article)
+
+      request3 = scope.limit(2).fetchRequest
+      request3.fetchLimit.should == 2
+    end
+
+    it "does the right thing with limit specified" do
+      error = Pointer.new(:object)
+      Article.all.sortBy(:title).limit(1).array.size.should == 1
     end
 
     it "returns objects of the target class" do
