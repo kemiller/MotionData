@@ -260,13 +260,11 @@ module MotionData
       request.predicate.predicateFormat.should == predicate.predicateFormat
     end
 
-    it "respects limits and offsets" do
+    it "respects limits" do
       @articles.limit(1)
-      @articles.offset(1)
       request = @articles.fetchRequest
 
       request.fetchLimit.should == 1
-      request.fetchOffset.should == 1
     end
 
     it "is able to use named scopes of the target model class" do
