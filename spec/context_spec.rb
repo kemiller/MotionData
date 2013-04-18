@@ -3,11 +3,11 @@ module MotionData
   describe Context do
 
     before do
-      MotionData.setupCoreDataStackWithInMemoryStore
+      MotionData.setupCoreDataStack('MotionData')
     end
 
     after do
-      #MagicalRecord.cleanUp
+      MotionData.resetCoreDataStack('MotionData')
     end
 
     describe "concerning the various types of contexts" do

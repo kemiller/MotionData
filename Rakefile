@@ -32,3 +32,20 @@ namespace :spec do
     sh "bundle exec kicker -c"
   end
 end
+
+namespace :schema do
+
+  desc "Clear the datamodel outputs"
+  task :clean do
+    files = Dir.glob(File.join(App.config.project_dir, 'resources', App.config.name) + ".{momd,xcdatamodel}")
+    files.each do |f|
+      rm_rf f
+    end
+  end
+
+  desc "Generate the xcdatamodel file"
+  task :build => :clean do
+    Dir.chdir App.config.project_dir
+    system("xcdm", App.config.name, "schemas", "resources")
+  end
+end
