@@ -5,7 +5,7 @@ Motion::Project::App.setup do |app|
     predicate.rb
     context.rb
     store_coordinator.rb
-    schema.rb
+    setup.rb
   }.map { |f| File.join(File.dirname(__FILE__), "motion_data/#{f}") }.each { |f| app.files.unshift(f) }
 
   app.frameworks += %w{ CoreData }

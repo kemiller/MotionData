@@ -38,10 +38,6 @@ module MotionData
         entity
       end
 
-      def inherited(klass)
-        MotionData::Schema.current.registerEntity(klass.entityDescription)
-      end
-
       # Core Data dynamically creates subclasses of model classes in order to
       # add the property accessors. These subclasses are named after the user’s
       # class, but contain underscores.
@@ -73,26 +69,19 @@ module MotionData
           if dynamicSubclass?
             modelClass.entityDescription
           else
-            EntityDescription.new.tap do |ed|
-              ed.name = ed.managedObjectClassName = name
-            end
+            MotionData.managedObjectModel.entitiesByName[name]
           end
         end
       end
 
       def hasOne(name, options = {})
-        #puts "#{self.name} has one `#{name}' (#{options.inspect})"
-        entityDescription.hasOne(name, options)
       end
 
       def hasMany(name, options = {})
-        #puts "#{self.name} has many `#{name}' (#{options.inspect})"
-        entityDescription.hasMany(name, options)
         defineRelationshipMethod(name)
       end
 
       def property(name, type, options = {})
-        entityDescription.property(name, type, options)
         definePropertyPredicateAccessor(name) if type == CoreTypes::Boolean
       end
 

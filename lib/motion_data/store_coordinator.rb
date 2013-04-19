@@ -17,10 +17,12 @@ module MotionData
       def store(schema, type, url = nil)
         coordinator = alloc.initWithManagedObjectModel(schema)
         error = Pointer.new(:object)
+        options = { NSMigratePersistentStoresAutomaticallyOption => true,
+                    NSInferMappingModelAutomaticallyOption => true}
         store = coordinator.addPersistentStoreWithType(type,
                                          configuration:nil,
                                                    URL:url,
-                                               options:nil,
+                                               options:options,
                                                  error:error)
         if store.nil?
           error[0].userInfo['metadata'].each do |key, value|

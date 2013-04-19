@@ -236,7 +236,7 @@ module MotionData
       end
 
       def targetClass
-        targetEntityDescription.modelClass
+        Kernel.const_get(targetEntityDescription.managedObjectClassName)
       end
 
       def inverseRelationshipName

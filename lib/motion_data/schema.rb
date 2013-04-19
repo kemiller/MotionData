@@ -1,26 +1,4 @@
 module MotionData
-  def self.setupCoreDataStackWithInMemoryStore
-    Schema.current.setupCoreDataStackWithInMemoryStore
-  end
-
-  def self.setupCoreDataStackWithSQLiteStore(path)
-    Schema.current.setupCoreDataStackWithSQLiteStore(path)
-  end
-
-  def self.setupCoreDataStack(name)
-    path = databasePath(name)
-    setupCoreDataStackWithSQLiteStore(path)
-  end
-
-  def self.resetCoreDataStack(name)
-    path = databasePath(name)
-    NSFileManager.defaultManager.removeItemAtPath(path, error: nil)
-  end
-
-  def self.databasePath(name)
-    dir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true).last
-    path = File.join(dir, name + '.sqlite')
-  end
 
   class EntityDescription < NSEntityDescription
     def property(name, type, options = {})

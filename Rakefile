@@ -5,7 +5,7 @@ Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'MotionData'
   app.files = %w{
-    lib/motion_data/schema.rb
+    lib/motion_data/setup.rb
     lib/motion_data/store_coordinator.rb
     lib/motion_data/context.rb
     lib/motion_data/predicate.rb
