@@ -135,5 +135,12 @@ module MotionData
         raise "Error when saving data: #{error.localizedDescription}"
       end
     end
+
+    def saveChangesInAllContexts
+      saveChanges
+      if parentContext
+        parentContext.saveChangesInAllContexts
+      end
+    end
   end
 end
