@@ -3,11 +3,11 @@ module MotionData
   describe ManagedObject do
 
     before do
-      MotionData.setupCoreDataStack('MotionData')
+      MotionData.setupCoreDataStack
     end
 
     after do
-      MotionData.resetCoreDataStack('MotionData')
+      MotionData.resetCoreDataStack
     end
 
     it "returns wether or not it's an actual model class defined by the user or a dynamic subclass defined by Core Data" do

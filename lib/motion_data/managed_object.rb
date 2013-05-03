@@ -28,6 +28,21 @@ module MotionData
 
     class << self
 
+      def inherited(klass)
+        klass.entityDescription.propertiesByName.each do |name, attDesc|
+          case attDesc
+          when NSAttributeDescription
+            if attDesc.attributeType == NSBooleanAttributeType
+              klass.definePropertyPredicateAccessor(name)
+            end
+          when NSRelationshipDescription
+            if attDesc.isToMany
+              klass.defineRelationshipMethod(name)
+            end
+          end
+        end
+      end
+
       def new(properties = nil)
         newInContext(Context.current, properties)
       end
@@ -65,24 +80,11 @@ module MotionData
       # Returns the entity description from the model class as defined by the
       # user, even if called on a class dynamically defined by Core Data.
       def entityDescription
-        @entityDescription ||= begin
           if dynamicSubclass?
             modelClass.entityDescription
           else
             MotionData.managedObjectModel.entitiesByName[name]
           end
-        end
-      end
-
-      def hasOne(name, options = {})
-      end
-
-      def hasMany(name, options = {})
-        defineRelationshipMethod(name)
-      end
-
-      def property(name, type, options = {})
-        definePropertyPredicateAccessor(name) if type == CoreTypes::Boolean
       end
 
       # Finders

@@ -211,11 +211,11 @@ module MotionData
 
   describe Scope::Relationship do
     after do
-      MotionData.resetCoreDataStack('MotionData')
+      MotionData.resetCoreDataStack
     end
 
     before do
-      MotionData.setupCoreDataStack('MotionData')
+      MotionData.setupCoreDataStack
 
       @context = Context.context
       @context.perform do
@@ -287,11 +287,11 @@ module MotionData
   describe Scope::Model do
 
     after do
-      MotionData.resetCoreDataStack('MotionData')
+      MotionData.resetCoreDataStack
     end
 
     before do
-      MotionData.setupCoreDataStack('MotionData')
+      MotionData.setupCoreDataStack
 
       Article.new(:title => 'article1', :published => true)
       @unpublishedArticle = Article.new(:title => 'article2', :published => false)

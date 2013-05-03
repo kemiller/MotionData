@@ -192,7 +192,7 @@ module MotionData
         #
         # TODO we currently use the one that takes a set instead of just one object, this is
         #      so we don't yet have to do any singularization
-        camelized = @relationshipName.to_s
+        camelized = @relationshipName.to_s.dup
         camelized[0] = camelized[0,1].upcase
         @owner.send("add#{camelized}", NSSet.setWithObject(entity))
         entity

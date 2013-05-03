@@ -3,11 +3,11 @@ module MotionData
   describe Context do
 
     before do
-      MotionData.setupCoreDataStack('MotionData')
+      MotionData.setupCoreDataStack
     end
 
     after do
-      MotionData.resetCoreDataStack('MotionData')
+      MotionData.resetCoreDataStack
     end
 
     describe "concerning the various types of contexts" do
