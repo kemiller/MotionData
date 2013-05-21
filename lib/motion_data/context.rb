@@ -107,15 +107,31 @@ module MotionData
         error_ptr = Pointer.new(:object)
         unless c.save(error_ptr) 
           error = error_ptr[0]
-          puts "Error when saving data: #{error.localizedDescription}"
-          if !error.userInfo['NSDetailedErrors'].nil?
-            error.userInfo['NSDetailedErrors'].each do |key, value|
-              puts "#{key}: #{value}"
-            end
-          end 
+          printError("Error when saving data: ", error)
           raise "Error when saving data: #{error.localizedDescription}"
         end
       end
+    end
+
+    def printError(message, error, indent = "")
+      puts indent + message + error.localizedDescription
+      if error.userInfo['reason']
+        puts indent + error.userInfo['reason']
+      end
+      if error.userInfo['metadata']
+        error.userInfo['metadata'].each do |key, value|
+          puts indent + "#{key}: #{value}"
+        end
+      end
+      if !error.userInfo['NSDetailedErrors'].nil?
+        error.userInfo['NSDetailedErrors'].each do |key, value|
+          if key.instance_of? NSError
+            printError("Sub-Error: ", key, indent + "   ")
+          else
+            puts indent + "#{key}: #{value}"
+          end
+        end
+      end 
     end
 
     def objectsInContext(*objectsFromOtherContext)
@@ -124,14 +140,9 @@ module MotionData
 
     def saveChanges
       error_ptr = Pointer.new(:object)
-      unless save(error_ptr)
+      unless save(error_ptr) 
         error = error_ptr[0]
-        puts "Error when saving data: #{error.localizedDescription}"
-        if !error.userInfo['NSDetailedErrors'].nil?
-          error.userInfo['NSDetailedErrors'].each do |key, value|
-            puts "#{key}: #{value}"
-          end
-        end
+        printError("Error when saving data: ", error)
         raise "Error when saving data: #{error.localizedDescription}"
       end
     end
