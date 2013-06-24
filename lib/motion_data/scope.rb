@@ -90,6 +90,10 @@ module MotionData
       array
     end
 
+    def first
+      limit(1).array.first
+    end
+
     def set
       raise "Not implemented."
     end
@@ -279,7 +283,7 @@ module MotionData
         if error[0]
           raise "Error while fetching: #{error[0].debugDescription}"
         end
-        result
+        result || []
       end
 
       def fetchRequest

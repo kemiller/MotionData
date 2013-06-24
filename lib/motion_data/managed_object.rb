@@ -93,6 +93,10 @@ module MotionData
         Scope::Model.alloc.initWithTarget(self)
       end
 
+      def first
+        all.first
+      end
+
       def where(conditions)
         all.where(conditions)
       end
