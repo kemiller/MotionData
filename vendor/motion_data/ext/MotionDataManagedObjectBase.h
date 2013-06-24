@@ -3,7 +3,7 @@
 @interface MotionDataManagedObjectBase : NSManagedObject
 
 + (id)scopeByName:(NSString *)name;
-+ (void)defineNamedScopeMethod:(NSString *)name;
++ (void)defineNamedScopeMethod:(NSString *)cname withScopeNamed:(NSString *)name;
 
 - (id)relationshipByName:(NSString *)name;
 + (void)defineRelationshipMethod:(NSString *)name;

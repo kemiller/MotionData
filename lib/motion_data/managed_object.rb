@@ -104,10 +104,15 @@ module MotionData
 
       # Adds a named scope to the class and makes it available as a class
       # method named after the scope.
-      def scope(name, scope)
+      def scope(name, scope = nil, &block)
         name = name.to_sym
+        if scope.nil? && block_given?
+          scope = Scope.alloc.initWithTarget(self, abstractPredicate: block)
+        end
         scopes[name] = scope
-        defineNamedScopeMethod(name)
+        self.class.send(:define_method, name) do |*args|
+          scope.reify(args)
+        end
         scope
       end
 

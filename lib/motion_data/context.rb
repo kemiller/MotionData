@@ -123,8 +123,8 @@ module MotionData
           puts indent + "#{key}: #{value}"
         end
       end
-      if !error.userInfo['NSDetailedErrors'].nil?
-        error.userInfo['NSDetailedErrors'].each do |key, value|
+      if !error.userInfo[NSDetailedErrorsKey].nil?
+        error.userInfo[NSDetailedErrorsKey].each do |key, value|
           if key.instance_of? NSError
             printError("Sub-Error: ", key, indent + "   ")
           else

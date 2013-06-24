@@ -2,7 +2,7 @@ module MotionData
   class Scope
     include Enumerable
 
-    attr_reader :target, :predicate, :sortDescriptors, :fetchLimit
+    attr_reader :target, :predicate, :sortDescriptors, :fetchLimit, :abstractPredicate
 
     def self.new
       alloc.initWithTarget(nil)
@@ -17,6 +17,12 @@ module MotionData
         @target, @predicate = target, predicate
         @sortDescriptors    = sortDescriptors ? sortDescriptors.dup : []
       end
+      self
+    end
+
+    def initWithTarget(target, abstractPredicate: block)
+      @abstractPredicate = block
+      initWithTarget(target)
       self
     end
 
@@ -88,6 +94,14 @@ module MotionData
       raise "Not implemented."
     end
 
+    def reify(args)
+      if abstractPredicate
+        where(abstractPredicate.call(*args))
+      else
+        self
+      end
+    end
+
     private
 
     def scopeWithPredicate(predicate, sortDescriptors:sortDescriptors)
@@ -104,6 +118,7 @@ module MotionData
       descriptors = sortDescriptorsByAddingSortDescriptors(sortDescriptor)
       scopeWithPredicate(@predicate, sortDescriptors:descriptors)
     end
+
   end
 
   class Scope

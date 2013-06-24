@@ -115,6 +115,12 @@ module MotionData
         Author.edgars.predicate.predicateFormat.should == 'name == "edgar"'
       end
 
+      it "uses dynamic scopes" do
+        Author.scope(:byName) { |name| Author.where(:name => name) }
+        Author.byName("edgar").target.should == Author
+        Author.byName("edgar").predicate.predicateFormat.should == 'name == "edgar"'
+      end
+
       it "extends the normal Core Data relationship set to act like a Scope::Relationship" do
         author = Author.new
         author.articles.should.is_a? Scope::Relationship::SetExt
@@ -123,9 +129,9 @@ module MotionData
 
         article1 = author.articles.new(:title => 'article1')
         article2 = author.articles.new(:title => 'article2')
-        author.articles.published.withTitle.to_a.should == []
+        author.articles.allPublished.withTitle.to_a.should == []
         article1.published = true; article2.published = true
-        author.articles.published.withTitle.to_a.should == [article2, article1]
+        author.articles.allPublished.withTitle.to_a.should == [article2, article1]
       end
     end
   end

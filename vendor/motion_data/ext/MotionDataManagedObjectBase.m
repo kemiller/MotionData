@@ -11,12 +11,12 @@
   return nil;
 }
 
-+ (void)defineNamedScopeMethod:(NSString *)name;
++ (void)defineNamedScopeMethod:(NSString *)cname withScopeNamed:(NSString *) name ;
 {
   IMP imp = imp_implementationWithBlock(^id(Class modelClass) {
     return [modelClass scopeByName:name];
   });
-  class_addMethod(object_getClass([self class]), NSSelectorFromString(name), imp, "@@:");
+  class_addMethod(object_getClass([self class]), NSSelectorFromString(cname), imp, "@@:");
 }
 
 - (id)relationshipByName:(NSString *)name;

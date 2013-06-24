@@ -272,15 +272,15 @@ module MotionData
     end
 
     it "is able to use named scopes of the target model class" do
-      @articles.published.should.be.instance_of Scope::Relationship
-      @articles.published.target.should == @articles.target
-      @articles.published.sortDescriptors.should == []
-      @articles.published.predicate.predicateFormat.should == 'published == 1'
+      @articles.allPublished.should.be.instance_of Scope::Relationship
+      @articles.allPublished.target.should == @articles.target
+      @articles.allPublished.sortDescriptors.should == []
+      @articles.allPublished.predicate.predicateFormat.should == 'published == 1'
 
-      @articles.published.withTitle.should.be.instance_of Scope::Relationship
-      @articles.published.withTitle.target.should == @articles.target
-      @articles.published.withTitle.sortDescriptors.should == [NSSortDescriptor.alloc.initWithKey('title', ascending:false)]
-      @articles.published.withTitle.predicate.predicateFormat.should == '(published == 1) AND title != nil'
+      @articles.allPublished.withTitle.should.be.instance_of Scope::Relationship
+      @articles.allPublished.withTitle.target.should == @articles.target
+      @articles.allPublished.withTitle.sortDescriptors.should == [NSSortDescriptor.alloc.initWithKey('title', ascending:false)]
+      @articles.allPublished.withTitle.predicate.predicateFormat.should == '(published == 1) AND title != nil'
     end
   end
 
@@ -353,15 +353,16 @@ module MotionData
     it "is able to use named scopes of the target model class" do
       scope = Scope::Model.alloc.initWithTarget(Article)
 
-      scope.published.should.be.instance_of Scope::Model
-      scope.published.target.should == Article
-      scope.published.sortDescriptors.should == []
-      scope.published.predicate.predicateFormat.should == 'published == 1'
+      scope.allPublished.should.be.instance_of Scope::Model
+      scope.allPublished.target.should == Article
+      scope.allPublished.sortDescriptors.should == []
+      scope.allPublished.predicate.predicateFormat.should == 'published == 1'
 
-      scope.published.withTitle.should.be.instance_of Scope::Model
-      scope.published.withTitle.target.should == Article
-      scope.published.withTitle.sortDescriptors.should == [NSSortDescriptor.alloc.initWithKey('title', ascending:false)]
-      scope.published.withTitle.predicate.predicateFormat.should == '(published == 1) AND title != nil'
+      scope.allPublished.withTitle.should.be.instance_of Scope::Model
+      scope.allPublished.withTitle.target.should == Article
+      scope.allPublished.withTitle.sortDescriptors.should == [NSSortDescriptor.alloc.initWithKey('title', ascending:false)]
+      scope.allPublished.withTitle.predicate.predicateFormat.should == '(published == 1) AND title != nil'
     end
+
   end
 end
