@@ -1,5 +1,5 @@
 $:.unshift("/Library/RubyMotion/lib")
-require 'motion/project'
+require 'motion/project/template/ios'
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
@@ -15,6 +15,7 @@ Motion::Project::App.setup do |app|
     app/test_models.rb
     app/app_delegate.rb
   }
+  app.files += Dir['lib/cdq/**']
   app.frameworks += %w{ CoreData }
 
   app.vendor_project('vendor/motion_data/ext', :static)
