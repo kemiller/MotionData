@@ -21,13 +21,15 @@ describe "CDQ Scope" do
   end
 
   it "can 'and' itself with another scope" do
-    @scope = CDQ::Scope.new
-    @other = CDQ::Scope.new(predicate: NSPredicate.predicateWithValue(false))
+    @scope = CDQ::Scope.new(limit: 1, offset: 1)
+    @other = CDQ::Scope.new(predicate: NSPredicate.predicateWithValue(false), limit: 2)
     @compound = @scope.and(@other)
     @compound.predicate.should == NSCompoundPredicate.andPredicateWithSubpredicates(
       [NSPredicate.predicateWithValue(true),
        NSPredicate.predicateWithValue(false)]
     )
+    @compound.limit.should == 2
+    @compound.offset.should == 1
   end
 
 end

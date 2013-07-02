@@ -12,7 +12,10 @@ module CDQ
 
     # Combine this scope with others in an intersection ("and") relationship
     def and(*scopes)
-      self.class.new(predicate: NSCompoundPredicate.andPredicateWithSubpredicates([self.predicate, *scopes.map(&:predicate)]))
+      new_limit = [limit, *scopes.map(&:limit)].compact.last
+      new_offset = [offset, *scopes.map(&:offset)].compact.last
+      self.class.new(predicate: NSCompoundPredicate.andPredicateWithSubpredicates([self.predicate, *scopes.map(&:predicate)]),
+                     limit: new_limit, offset: new_offset)
     end
   end
 end
