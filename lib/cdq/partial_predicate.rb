@@ -10,7 +10,7 @@ module CDQ
     end
 
     def eq(value)
-      Scope.new(predicate: make_pred(key, NSEqualToPredicateOperatorType, value))
+      scope.and(make_pred(key, NSEqualToPredicateOperatorType, value))
     end
 
     private
