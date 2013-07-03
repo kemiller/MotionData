@@ -6,6 +6,7 @@ module CDQ
 
     OPERATORS = {
       :eq => [NSEqualToPredicateOperatorType, :equal],
+      :ne => [NSNotEqualToPredicateOperatorType, :not_equal],
       :lt => [NSLessThanPredicateOperatorType, :less_than],
       :le => [NSLessThanOrEqualToPredicateOperatorType, :less_than_or_equal],
       :gt => [NSGreaterThanPredicateOperatorType, :greater_than],
