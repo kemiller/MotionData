@@ -2,7 +2,7 @@
 module CDQ
   class PartialPredicate
 
-    attr_reader :key, :scope
+    attr_reader :key, :scope, :operation
 
     OPERATORS = {
       :eq => [NSEqualToPredicateOperatorType, :equal],
@@ -12,9 +12,10 @@ module CDQ
       :ge => [NSGreaterThanOrEqualToPredicateOperatorType, :greater_than_or_equal]
     }
       
-    def initialize(key, scope)
+    def initialize(key, scope, operation = :and)
       @key = key
       @scope = scope
+      @operation = operation
     end
 
     OPERATORS.each do |op, (type, synonym)|
@@ -36,7 +37,7 @@ module CDQ
     end
 
     def make_scope(key, type, value)
-      scope.and(make_pred(key, type, value))
+      scope.send(operation, make_pred(key, type, value))
     end
 
   end

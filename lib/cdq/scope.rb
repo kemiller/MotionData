@@ -12,6 +12,20 @@ module CDQ
 
     # Combine this scope with others in an intersection ("and") relationship
     def and(scope)
+      merge_scope(scope) do |left, right|
+        NSCompoundPredicate.andPredicateWithSubpredicates([left, right])
+      end
+    end
+
+    def or(scope)
+      merge_scope(scope) do |left, right|
+        NSCompoundPredicate.orPredicateWithSubpredicates([left, right])
+      end
+    end
+
+    private
+
+    def merge_scope(scope, &block)
       case scope
       when Scope
         new_limit = [limit, scope.limit].compact.last
@@ -22,9 +36,10 @@ module CDQ
         new_limit = limit
         new_offset = offset
       end
-      new_predicate = NSCompoundPredicate.andPredicateWithSubpredicates([self.predicate, other_predicate])
+      new_predicate = block.call(self.predicate, other_predicate)
       self.class.new(predicate: new_predicate, limit: new_limit, offset: new_offset)
     end
+
   end
 end
 

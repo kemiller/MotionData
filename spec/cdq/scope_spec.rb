@@ -41,4 +41,25 @@ describe "CDQ Scope" do
     )
   end
 
+  it "can 'or' itself with another scope" do
+    @scope = CDQ::Scope.new(limit: 1, offset: 1)
+    @other = CDQ::Scope.new(predicate: NSPredicate.predicateWithValue(false), limit: 2)
+    @compound = @scope.or(@other)
+    @compound.predicate.should == NSCompoundPredicate.orPredicateWithSubpredicates(
+      [NSPredicate.predicateWithValue(true),
+       NSPredicate.predicateWithValue(false)]
+    )
+    @compound.limit.should == 2
+    @compound.offset.should == 1
+  end
+
+  it "can 'or' itself with an NSPredicate" do
+    @scope = CDQ::Scope.new
+    @compound = @scope.or(NSPredicate.predicateWithValue(false))
+    @compound.predicate.should == NSCompoundPredicate.orPredicateWithSubpredicates(
+      [NSPredicate.predicateWithValue(true),
+       NSPredicate.predicateWithValue(false)]
+    )
+  end
+
 end
