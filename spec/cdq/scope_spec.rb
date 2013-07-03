@@ -62,4 +62,12 @@ describe "CDQ Scope" do
     )
   end
 
+  it "can make a new scope with a new limit" do:w
+    @scope = CDQ::Scope.new
+    new_scope = @scope.limit(1)
+
+    new_scope.limit.should == 1
+    new_scope.offset.should == nil
+  end
+  
 end

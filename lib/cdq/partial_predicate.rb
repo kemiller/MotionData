@@ -10,7 +10,11 @@ module CDQ
       :lt => [NSLessThanPredicateOperatorType, :less_than],
       :le => [NSLessThanOrEqualToPredicateOperatorType, :less_than_or_equal],
       :gt => [NSGreaterThanPredicateOperatorType, :greater_than],
-      :ge => [NSGreaterThanOrEqualToPredicateOperatorType, :greater_than_or_equal]
+      :ge => [NSGreaterThanOrEqualToPredicateOperatorType, :greater_than_or_equal],
+      :include => [NSContainsPredicateOperatorType],
+      :in => [NSInPredicateOperatorType],
+      :begins_with => [NSBeginsWithPredicateOperatorType],
+      :ends_with => [NSEndsWithPredicateOperatorType]
     }
       
     def initialize(key, scope, operation = :and)
@@ -21,11 +25,13 @@ module CDQ
 
     OPERATORS.each do |op, (type, synonym)|
       define_method(op) do |value| 
-        make_scope(key, type, value)
+        make_scope(type, value)
       end
-      alias_method synonym, op
+      alias synonym, op if synonym
     end
 
+    def between(min, max);   make_scope(NSBetweenPredicateOperatorType, [min, max]); end
+      
     private
 
     def make_pred(key, type, value, options = 0)
@@ -37,7 +43,7 @@ module CDQ
         options:options)
     end
 
-    def make_scope(key, type, value)
+    def make_scope(type, value)
       scope.send(operation, make_pred(key, type, value))
     end
 
