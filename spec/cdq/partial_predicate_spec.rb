@@ -13,21 +13,15 @@ describe "CDQ Partial Predicates" do
 
   it "creates an equality predicate" do
     scope = @ppred.eq(1)
-    scope.predicate.should == NSCompoundPredicate.andPredicateWithSubpredicates(
-      [NSPredicate.predicateWithValue(true), make_pred('count', NSEqualToPredicateOperatorType, 1)]
-    )
+    scope.predicate.should == make_pred('count', NSEqualToPredicateOperatorType, 1)
 
     scope = @ppred.equal(1)
-    scope.predicate.should == NSCompoundPredicate.andPredicateWithSubpredicates(
-      [NSPredicate.predicateWithValue(true), make_pred('count', NSEqualToPredicateOperatorType, 1)]
-    )
+    scope.predicate.should == make_pred('count', NSEqualToPredicateOperatorType, 1)
   end
 
   it "creates a less-than predicate" do
     scope = @ppred.lt(1)
-    scope.predicate.should == NSCompoundPredicate.andPredicateWithSubpredicates(
-      [NSPredicate.predicateWithValue(true), make_pred('count', NSLessThanPredicateOperatorType, 1)]
-    )
+    scope.predicate.should == make_pred('count', NSLessThanPredicateOperatorType, 1)
   end
 
   it "preserves the previous scope" do
@@ -39,7 +33,8 @@ describe "CDQ Partial Predicates" do
   end
 
   it "works with 'or' too" do
-    ppred = CDQ::PartialPredicate.new(:count, @scope, :or)
+    scope = CDQ::Scope.new(predicate: NSPredicate.predicateWithValue(true))
+    ppred = CDQ::PartialPredicate.new(:count, scope, :or)
     ppred.eq(1).predicate.should == NSCompoundPredicate.orPredicateWithSubpredicates(
       [NSPredicate.predicateWithValue(true), make_pred('count', NSEqualToPredicateOperatorType, 1)]
     )

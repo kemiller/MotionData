@@ -45,6 +45,9 @@ module MotionData
         predicate = conditions
       when String
         predicate = NSPredicate.predicateWithFormat(conditions, argumentArray:formatArguments)
+      when CDQ::Scope
+        sortDescriptors = sortDescriptorsByAddingSortDescriptors(*conditions.sort_descriptors)
+        predicate = conditions.predicate
       else
         raise ArgumentError, "unsupported where conditions class `#{conditions.class}'"
       end

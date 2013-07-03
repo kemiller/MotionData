@@ -24,10 +24,10 @@ module CDQ
     end
 
     OPERATORS.each do |op, (type, synonym)|
-      define_method(op) do |value| 
-        make_scope(type, value)
+      define_method(op) do |value, options = 0| 
+        make_scope(type, value, options)
       end
-      alias synonym, op if synonym
+      alias_method synonym, op if synonym
     end
 
     def between(min, max);   make_scope(NSBetweenPredicateOperatorType, [min, max]); end
@@ -43,8 +43,8 @@ module CDQ
         options:options)
     end
 
-    def make_scope(type, value)
-      scope.send(operation, make_pred(key, type, value))
+    def make_scope(type, value, options = 0)
+      scope.send(operation, make_pred(key, type, value, options))
     end
 
   end

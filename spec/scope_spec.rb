@@ -89,6 +89,21 @@ module MotionData
       scope3.predicate.predicateFormat.should == '(name != "bob" OR amount > 42) AND enabled == 1'
     end
 
+    it "from a CDQ scope" do
+      scope1 = Scope.new
+
+      scope2 = scope1.where(CDQ::Scope.new.where(:name).ne('bob', NSCaseInsensitivePredicateOption).or(:amount).gt(42).sort_by(:name))
+      scope3 = scope1.where(CDQ::Scope.new.where(:enabled).eq(true).and(:'job.title').ne(nil).sort_by(:amount, :desc))
+
+      scope4 = scope3.where(scope2)
+      scope4.predicate.predicateFormat.should == '(enabled == 1 AND job.title != nil) AND (name !=[c] "bob" OR amount > 42)'
+      scope4.sortDescriptors.should == [
+        NSSortDescriptor.alloc.initWithKey('amount', ascending:false),
+        NSSortDescriptor.alloc.initWithKey('name', ascending:true)
+      ]
+    end
+
+
     it "does not modify the original scopes" do
       scope1 = Scope.new
 
