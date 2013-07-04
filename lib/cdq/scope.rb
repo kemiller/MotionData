@@ -47,13 +47,14 @@ module CDQ
     # Create a new scope with the same values as this one, optionally overriding
     # any of them in the options
     def new(opts = {})
-      locals = {
-        sort_descriptors: sort_descriptors,
+      self.class.new(locals.merge(opts))
+    end
+
+    def locals
+      { sort_descriptors: sort_descriptors,
         predicate: predicate,
         limit: limit,
-        offset: offset
-      }
-      self.class.new(locals.merge(opts))
+        offset: offset }
     end
 
     def sort_by(key, dir = :ascending)
@@ -64,6 +65,15 @@ module CDQ
       end
 
       new(sort_descriptors: @sort_descriptors + [NSSortDescriptor.sortDescriptorWithKey(key, ascending: ascending)])
+    end
+
+    def fetch_request
+      NSFetchRequest.new.tap do |req|
+        req.predicate = predicate
+        req.fetchLimit = limit if limit
+        req.fetchOffset = offset if offset
+        req.sortDescriptors = sort_descriptors unless sort_descriptors.empty?
+      end
     end
 
     private

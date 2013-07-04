@@ -14,8 +14,11 @@ Motion::Project::App.setup do |app|
 
     app/test_models.rb
     app/app_delegate.rb
+
+    lib/cdq/partial_predicate.rb
+    lib/cdq/scope.rb
+    lib/cdq/targeted_query.rb
   }
-  app.files += Dir['lib/cdq/**']
   app.frameworks += %w{ CoreData }
 
   app.vendor_project('vendor/motion_data/ext', :static)
