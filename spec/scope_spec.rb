@@ -92,8 +92,8 @@ module MotionData
     it "from a CDQ scope" do
       scope1 = Scope.new
 
-      scope2 = scope1.where(CDQ::Scope.new.where(:name).ne('bob', NSCaseInsensitivePredicateOption).or(:amount).gt(42).sort_by(:name))
-      scope3 = scope1.where(CDQ::Scope.new.where(:enabled).eq(true).and(:'job.title').ne(nil).sort_by(:amount, :desc))
+      scope2 = scope1.where(CDQ::CDQQuery.new.where(:name).ne('bob', NSCaseInsensitivePredicateOption).or(:amount).gt(42).sort_by(:name))
+      scope3 = scope1.where(CDQ::CDQQuery.new.where(:enabled).eq(true).and(:'job.title').ne(nil).sort_by(:amount, :desc))
 
       scope4 = scope3.where(scope2)
       scope4.predicate.predicateFormat.should == '(enabled == 1 AND job.title != nil) AND (name !=[c] "bob" OR amount > 42)'

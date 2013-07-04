@@ -16,7 +16,7 @@ Motion::Project::App.setup do |app|
     app/app_delegate.rb
 
     lib/cdq/partial_predicate.rb
-    lib/cdq/scope.rb
+    lib/cdq/query.rb
     lib/cdq/targeted_query.rb
   }
   app.frameworks += %w{ CoreData }

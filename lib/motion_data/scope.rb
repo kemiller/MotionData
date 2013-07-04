@@ -45,7 +45,7 @@ module MotionData
         predicate = conditions
       when String
         predicate = NSPredicate.predicateWithFormat(conditions, argumentArray:formatArguments)
-      when CDQ::Scope
+      when CDQ::CDQQuery
         sortDescriptors = sortDescriptorsByAddingSortDescriptors(*conditions.sort_descriptors)
         predicate = conditions.predicate
       else

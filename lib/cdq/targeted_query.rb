@@ -1,9 +1,9 @@
 
 module CDQ
 
-  class Scope; end
+  class CDQQuery; end
 
-  class TargetedQuery < Scope
+  class CDQTargetedQuery < CDQQuery
 
     include Enumerable
 
@@ -13,21 +13,15 @@ module CDQ
     end
 
     def count
-      error = Pointer.new(:object)
-      result = MotionData::Context.current.countForFetchRequest(fetch_request, error:error)
-      if error[0]
-        raise "Error while fetching: #{error[0].debugDescription}"
+      with_error_object(0) do |error|
+        MotionData::Context.current.countForFetchRequest(fetch_request, error:error)
       end
-      result || 0
     end
 
     def array
-      error = Pointer.new(:object)
-      result = MotionData::Context.current.executeFetchRequest(fetch_request, error:error)
-      if error[0]
-        raise "Error while fetching: #{error[0].debugDescription}"
+      with_error_object([]) do |error|
+        MotionData::Context.current.executeFetchRequest(fetch_request, error:error)
       end
-      result || []
     end
 
     def first
@@ -53,5 +47,15 @@ module CDQ
     def new(opts = {})
       self.class.new(@target, locals.merge(opts))
     end
+
+    def with_error_object(default, &block)
+      error = Pointer.new(:object)
+      result = block.call(error)
+      if error[0]
+        raise "Error while fetching: #{error[0].debugDescription}"
+      end
+      result || default
+    end
+
   end
 end

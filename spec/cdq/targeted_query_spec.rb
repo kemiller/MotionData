@@ -4,7 +4,6 @@ module CDQ
 
     before do
       MotionData.setupCoreDataStack
-
     end
 
     after do
@@ -12,13 +11,13 @@ module CDQ
     end
 
     it "reflects a base state" do
-      tq = TargetedQuery.new(Author.entityDescription)
+      tq = CDQTargetedQuery.new(Author.entityDescription)
       tq.count.should == 0
       tq.array.should == []
     end
 
     it "can count objects" do
-      tq = TargetedQuery.new(Author.entityDescription)
+      tq = CDQTargetedQuery.new(Author.entityDescription)
       Author.new(name: "eecummings")
       tq.count.should == 1
       Author.new(name: "T. S. Eliot")
@@ -26,7 +25,7 @@ module CDQ
     end
 
     it "can fetch objects" do
-      tq = TargetedQuery.new(Author.entityDescription)
+      tq = CDQTargetedQuery.new(Author.entityDescription)
       eecummings = Author.new(name: "eecummings")
       tseliot = Author.new(name: "T. S. Eliot")
       tq.array.sort_by { |o| o.name }.should == [tseliot, eecummings]
@@ -35,7 +34,7 @@ module CDQ
     describe "CDQ Targeted Queries with data" do
 
       before do
-        @tq = TargetedQuery.new(Author.entityDescription)
+        @tq = CDQTargetedQuery.new(Author.entityDescription)
         @eecummings = Author.new(name: "eecummings")
         @tseliot = Author.new(name: "T. S. Eliot")
         @dante = Author.new(name: "dante")

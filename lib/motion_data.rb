@@ -9,8 +9,9 @@ Motion::Project::App.setup do |app|
   }.map { |f| File.join(File.dirname(__FILE__), "motion_data/#{f}") }.each { |f| app.files.unshift(f) }
 
   %w{
-    scope.rb
     partial_predicate.rb
+    query.rb
+    targeted_query.rb
   }.map { |f| File.join(File.dirname(__FILE__), "cdq/#{f}") }.each { |f| app.files.unshift(f) }
 
   app.frameworks += %w{ CoreData }
