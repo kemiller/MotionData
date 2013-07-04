@@ -8,7 +8,7 @@ Motion::Project::App.setup do |app|
     setup.rb
   }.map { |f| File.join(File.dirname(__FILE__), "motion_data/#{f}") }.each { |f| app.files.unshift(f) }
 
-  app.files.unshift("cdq.rb")
+  app.files.unshift(File.join(File.dirname(__FILE__), "cdq.rb"))
 
   %w{
     partial_predicate.rb

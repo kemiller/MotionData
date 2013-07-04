@@ -1,6 +1,9 @@
 
 module CDQ
 
+  class CDQObject; end
+  class CDQQuery < CDQObject; end
+
   class CDQTargetedQuery < CDQQuery
 
     include Enumerable

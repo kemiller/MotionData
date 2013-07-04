@@ -1,6 +1,11 @@
 
 module CDQ
 
+  class CDQObject; end
+  class CDQQuery < CDQObject; end
+  class CDQPartialPredicate < CDQObject; end
+  class CDQTargetedQuery < CDQQuery; end
+
   def cdq(obj = nil)
     obj ||= self
     case obj
