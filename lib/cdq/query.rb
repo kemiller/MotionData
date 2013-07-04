@@ -1,6 +1,6 @@
 
 module CDQ
-  class CDQQuery
+  class CDQQuery < CDQObject
 
     EMPTY = Object.new
 

@@ -1,6 +1,6 @@
 
 module CDQ
-  class CDQPartialPredicate
+  class CDQPartialPredicate < CDQObject
 
     attr_reader :key, :scope, :operation
 

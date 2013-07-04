@@ -15,6 +15,8 @@ Motion::Project::App.setup do |app|
     app/test_models.rb
     app/app_delegate.rb
 
+    lib/cdq.rb
+    lib/cdq/object.rb
     lib/cdq/partial_predicate.rb
     lib/cdq/query.rb
     lib/cdq/targeted_query.rb

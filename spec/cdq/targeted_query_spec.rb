@@ -4,6 +4,10 @@ module CDQ
 
     before do
       MotionData.setupCoreDataStack
+
+      class << self
+        include CDQ
+      end
     end
 
     after do
@@ -43,6 +47,7 @@ module CDQ
 
       it "performs a sorted fetch" do
         @tq.sort_by(:name).array.should == [@tseliot, @dante, @eecummings]
+        cdq(Author).sort_by(:name).array.should == [@tseliot, @dante, @eecummings]
       end
 
       it "performs a limited fetch" do
