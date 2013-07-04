@@ -32,13 +32,13 @@ module CDQ
       tq = CDQTargetedQuery.new(Author.entityDescription)
       eecummings = Author.new(name: "eecummings")
       tseliot = Author.new(name: "T. S. Eliot")
-      tq.array.sort_by { |o| o.name }.should == [tseliot, eecummings]
+      tq.array.sort_by(&:name).should == [tseliot, eecummings]
     end
 
     describe "CDQ Targeted Queries with data" do
 
       before do
-        @tq = CDQTargetedQuery.new(Author.entityDescription)
+        @tq = cdq(Author)
         @eecummings = Author.new(name: "eecummings")
         @tseliot = Author.new(name: "T. S. Eliot")
         @dante = Author.new(name: "dante")
@@ -47,7 +47,6 @@ module CDQ
 
       it "performs a sorted fetch" do
         @tq.sort_by(:name).array.should == [@tseliot, @dante, @eecummings]
-        cdq(Author).sort_by(:name).array.should == [@tseliot, @dante, @eecummings]
       end
 
       it "performs a limited fetch" do
