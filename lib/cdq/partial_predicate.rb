@@ -44,7 +44,7 @@ module CDQ
     end
 
     def make_scope(type, value, options = 0)
-      scope.send(operation, make_pred(key, type, value, options))
+      scope.send(operation, make_pred(key, type, value, options), key)
     end
 
   end

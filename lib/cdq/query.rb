@@ -11,6 +11,7 @@ module CDQ
       @limit = opts[:limit]
       @offset = opts[:offset]
       @sort_descriptors = opts[:sort_descriptors] || []
+      @saved_key = opts[:saved_key]
     end
 
     def limit(value = EMPTY)
@@ -30,16 +31,16 @@ module CDQ
     end
 
     # Combine this scope with others in an intersection ("and") relationship
-    def and(scope)
-      merge_scope(scope, :and) do |left, right|
+    def and(scope = nil, key_to_save = nil)
+      merge_scope(scope, :and, key_to_save) do |left, right|
         NSCompoundPredicate.andPredicateWithSubpredicates([left, right])
       end
     end
     alias_method :where, :and
 
     # Combine this scope with others in a union ("or") relationship
-    def or(scope)
-      merge_scope(scope, :or) do |left, right|
+    def or(scope = nil, key_to_save = nil)
+      merge_scope(scope, :or, key_to_save) do |left, right|
         NSCompoundPredicate.orPredicateWithSubpredicates([left, right])
       end
     end
@@ -78,10 +79,16 @@ module CDQ
 
     private
 
-    def merge_scope(scope, operation, &block)
+    def merge_scope(scope, operation, key_to_save, &block)
       case scope
       when Symbol
         return CDQPartialPredicate.new(scope, self, operation)
+      when NilClass
+        if @saved_key
+          return CDQPartialPredicate.new(@saved_key, self, operation)
+        else
+          raise "Zero-argument 'and' and 'or' can only be used if there is a key in the preceding predicate"
+        end
       when CDQQuery
         new_limit = [limit, scope.limit].compact.last
         new_offset = [offset, scope.offset].compact.last
@@ -98,7 +105,7 @@ module CDQ
       else
         new_predicate = other_predicate
       end
-      new(predicate: new_predicate, limit: new_limit, offset: new_offset, sort_descriptors: new_sort_descriptors)
+      new(predicate: new_predicate, limit: new_limit, offset: new_offset, sort_descriptors: new_sort_descriptors, saved_key: key_to_save)
     end
 
   end

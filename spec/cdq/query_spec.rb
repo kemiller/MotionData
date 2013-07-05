@@ -2,103 +2,108 @@
 module CDQ
   describe "CDQ Query" do
 
-    it "creates a scope with a simple true predicate" do
-      @scope = CDQQuery.new
-      @scope.predicate.should == nil
-      @scope.limit.should == nil
-      @scope.offset.should == nil
+    before do
+      @query = CDQQuery.new
     end
 
-    it "can set a limit on a scope" do
-      @scope = CDQQuery.new(limit: 1)
-      @scope.limit.should == 1
-      @scope.offset.should == nil
+    it "creates a query with a simple true predicate" do
+      @query.predicate.should == nil
+      @query.limit.should == nil
+      @query.offset.should == nil
     end
 
-    it "can set a offset on a scope" do
-      @scope = CDQQuery.new(offset: 1)
-      @scope.limit.should == nil
-      @scope.offset.should == 1
+    it "can set a limit on a query" do
+      @query = CDQQuery.new(limit: 1)
+      @query.limit.should == 1
+      @query.offset.should == nil
     end
 
-    it "can 'and' itself with another scope" do
-      @scope = CDQQuery.new(limit: 1, offset: 1)
+    it "can set a offset on a query" do
+      @query = CDQQuery.new(offset: 1)
+      @query.limit.should == nil
+      @query.offset.should == 1
+    end
+
+    it "can 'and' itself with another query" do
+      @query = CDQQuery.new(limit: 1, offset: 1)
       @other = CDQQuery.new(predicate: NSPredicate.predicateWithValue(false), limit: 2)
-      @compound = @scope.and(@other)
+      @compound = @query.and(@other)
       @compound.predicate.should == NSPredicate.predicateWithValue(false)
       @compound.limit.should == 2
       @compound.offset.should == 1
     end
 
     it "can 'and' itself with an NSPredicate" do
-      @scope = CDQQuery.new
-      @compound = @scope.and(NSPredicate.predicateWithValue(false))
+      @compound = @query.and(NSPredicate.predicateWithValue(false))
       @compound.predicate.should == NSPredicate.predicateWithValue(false)
     end
 
     it "starts a partial predicate when 'and'-ing a symbol" do
-      @scope = CDQQuery.new
-      ppred = @scope.and(:name)
+      ppred = @query.and(:name)
       ppred.class.should == CDQPartialPredicate
       ppred.key.should == :name
     end
 
-    it "can 'or' itself with another scope" do
-      @scope = CDQQuery.new(limit: 1, offset: 1)
+    it "can 'or' itself with another query" do
+      @query = CDQQuery.new(limit: 1, offset: 1)
       @other = CDQQuery.new(predicate: NSPredicate.predicateWithValue(false), limit: 2)
-      @compound = @scope.or(@other)
+      @compound = @query.or(@other)
       @compound.predicate.should == NSPredicate.predicateWithValue(false)
       @compound.limit.should == 2
       @compound.offset.should == 1
     end
 
     it "can 'or' itself with an NSPredicate" do
-      @scope = CDQQuery.new
-      @compound = @scope.or(NSPredicate.predicateWithValue(false))
+      @compound = @query.or(NSPredicate.predicateWithValue(false))
       @compound.predicate.should == NSPredicate.predicateWithValue(false)
     end
 
     it "can sort by a key" do
-      @scope = CDQQuery.new
-      @scope.sort_by(:name).sort_descriptors.should == [
+      @query.sort_by(:name).sort_descriptors.should == [
         NSSortDescriptor.sortDescriptorWithKey('name', ascending: true)
       ]
     end
 
     it "can sort descending" do
-      @scope = CDQQuery.new
-      @scope.sort_by(:name, :desc).sort_descriptors.should == [
+      @query.sort_by(:name, :desc).sort_descriptors.should == [
         NSSortDescriptor.sortDescriptorWithKey('name', ascending: false)
       ]
     end
 
     it "can chain sorts" do
-      @scope = CDQQuery.new
-      @scope.sort_by(:name).sort_by(:title).sort_descriptors.should == [
+      @query.sort_by(:name).sort_by(:title).sort_descriptors.should == [
         NSSortDescriptor.sortDescriptorWithKey('name', ascending: true),
         NSSortDescriptor.sortDescriptorWithKey('title', ascending: true)
       ]
     end
 
-    it "handles complex examples" do
-      scope1 = CDQQuery.new
-      scope2 = scope1.where(CDQQuery.new.where(:name).ne('bob', NSCaseInsensitivePredicateOption).or(:amount).gt(42).sort_by(:name))
-      scope3 = scope1.where(CDQQuery.new.where(:enabled).eq(true).and(:'job.title').ne(nil).sort_by(:amount, :desc))
+    it "reuses the previous key when calling 'and' or 'or' with no arguments" do
+      compound = @query.where(:name).begins_with('foo').and.ne('fool')
+      compound.predicate.predicateFormat.should == 'name BEGINSWITH "foo" AND name != "fool"'
 
-      scope4 = scope3.where(scope2)
-      scope4.predicate.predicateFormat.should == '(enabled == 1 AND job.title != nil) AND (name !=[c] "bob" OR amount > 42)'
-      scope4.sort_descriptors.should == [
+      compound = @query.where(:name).begins_with('foo').or.eq('loofa')
+      compound.predicate.predicateFormat.should == 'name BEGINSWITH "foo" OR name == "loofa"'
+    end
+
+    it "handles complex examples" do
+      query1 = CDQQuery.new
+      query2 = query1.where(CDQQuery.new.where(:name).ne('bob', NSCaseInsensitivePredicateOption).or(:amount).gt(42).sort_by(:name))
+      query3 = query1.where(CDQQuery.new.where(:enabled).eq(true).and(:'job.title').ne(nil).sort_by(:amount, :desc))
+
+      query4 = query3.where(query2)
+      query4.predicate.predicateFormat.should == '(enabled == 1 AND job.title != nil) AND (name !=[c] "bob" OR amount > 42)'
+      query4.sort_descriptors.should == [
         NSSortDescriptor.alloc.initWithKey('amount', ascending:false),
         NSSortDescriptor.alloc.initWithKey('name', ascending:true)
       ]
     end
 
-    it "can make a new scope with a new limit" do:w
-    @scope = CDQQuery.new
-    new_scope = @scope.limit(1)
+    it "can make a new query with a new limit" do:w
+    @query = CDQQuery.new
+    new_query = @query.limit(1)
 
-    new_scope.limit.should == 1
-    new_scope.offset.should == nil
+    new_query.limit.should == 1
+    new_query.offset.should == nil
   end
 
 end
