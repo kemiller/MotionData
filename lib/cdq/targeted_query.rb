@@ -8,9 +8,10 @@ module CDQ
 
     include Enumerable
 
-    def initialize(target, opts = {})
+    def initialize(target, target_class = NSManagedObject, opts = {})
       super(opts)
       @target = target
+      @target_class = target_class
     end
 
     def count
@@ -43,10 +44,16 @@ module CDQ
       end
     end
 
+    def create(opts = {})
+      @target_class.alloc.initWithEntity(@target, insertIntoManagedObjectContext:MotionData::Context.current).tap do |entity|
+        opts.each { |k, v| entity.send("#{k}=", v) }
+      end
+    end
+
     private
 
     def new(opts = {})
-      self.class.new(@target, locals.merge(opts))
+      self.class.new(@target, @targeted_query, locals.merge(opts))
     end
 
     def with_error_object(default, &block)

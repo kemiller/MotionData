@@ -15,13 +15,13 @@ module CDQ
     end
 
     it "reflects a base state" do
-      tq = CDQTargetedQuery.new(Author.entityDescription)
+      tq = CDQTargetedQuery.new(Author.entityDescription, Author)
       tq.count.should == 0
       tq.array.should == []
     end
 
     it "can count objects" do
-      tq = CDQTargetedQuery.new(Author.entityDescription)
+      tq = CDQTargetedQuery.new(Author.entityDescription, Author)
       Author.new(name: "eecummings")
       tq.count.should == 1
       Author.new(name: "T. S. Eliot")
@@ -29,10 +29,15 @@ module CDQ
     end
 
     it "can fetch objects" do
-      tq = CDQTargetedQuery.new(Author.entityDescription)
+      tq = CDQTargetedQuery.new(Author.entityDescription, Author)
       eecummings = Author.new(name: "eecummings")
       tseliot = Author.new(name: "T. S. Eliot")
       tq.array.sort_by(&:name).should == [tseliot, eecummings]
+    end
+
+    it "can create objects" do
+      maya = cdq(Author).create(name: "maya angelou")
+      cdq(Author).where(:name).eq("maya angelou").first.should == maya
     end
 
     describe "CDQ Targeted Queries with data" do
