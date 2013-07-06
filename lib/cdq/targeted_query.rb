@@ -50,7 +50,20 @@ module CDQ
       end
     end
 
+    def scope(name, query)
+      named_scopes[name] = query
+    end
+
+    def method_missing(name, *args)
+      named_scopes[name] || super(name, *args)
+    end
+
     private
+
+    def named_scopes
+      @@named_scopes ||= {}
+      @@named_scopes[@target] ||= {}
+    end
 
     def new(opts = {})
       self.class.new(@target, @targeted_query, locals.merge(opts))

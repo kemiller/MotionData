@@ -90,6 +90,11 @@ module CDQ
 
         @tq.sort_by(:name).map { |e| e }.should == entries
       end
+
+      it "can create a named scope" do
+        @tq.scope :two_sorted_by_name, @tq.sort_by(:name).limit(2)
+        @tq.two_sorted_by_name.array.should == [@tseliot, @dante]
+      end
     end
 
 
