@@ -17,7 +17,7 @@ module CDQ
   #   MyEntity.create(name: "John")
   #   MyEntity.sort_by(:title)[4]
   #
-  #   class MyEntity < CDQManagedObject
+  #   class MyEntity < CDQ::CDQManagedObject
   #     scope :last_week, where(:created_at).ge(date.delta(weeks: -2)).and.lt(date.delta(weeks: -1))
   #   end
   #
