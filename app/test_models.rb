@@ -6,3 +6,7 @@ class Article < MotionData::ManagedObject
   scope :withTitle, where( value(:title) != nil ).sortBy(:title, ascending:false)
   scope :publishedSince { |date| all.where(value(:publishedAt) > date) }
 end
+
+class Writer < CDQ::CDQManagedObject
+end
+

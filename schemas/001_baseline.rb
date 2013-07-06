@@ -18,4 +18,9 @@ schema "0.0.1" do
     has_many :articles 
   end
 
+  entity "Writer" do
+    string :name, optional: false
+    float :fee
+  end
+
 end

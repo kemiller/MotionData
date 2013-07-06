@@ -6,6 +6,8 @@ module CDQ
   class CDQPartialPredicate < CDQObject; end
   class CDQTargetedQuery < CDQQuery; end
 
+  extend self
+
   def cdq(obj = nil)
     obj ||= self
     case obj

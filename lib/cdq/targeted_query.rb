@@ -26,6 +26,10 @@ module CDQ
       end
     end
 
+    def all
+      self
+    end
+
     def first
       limit(1).array.first
     end

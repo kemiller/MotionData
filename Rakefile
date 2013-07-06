@@ -12,14 +12,15 @@ Motion::Project::App.setup do |app|
     lib/motion_data/managed_object.rb
     lib/motion_data/scope.rb
 
-    app/test_models.rb
-    app/app_delegate.rb
-
     lib/cdq.rb
     lib/cdq/object.rb
     lib/cdq/partial_predicate.rb
     lib/cdq/query.rb
     lib/cdq/targeted_query.rb
+    lib/cdq/managed_object.rb
+
+    app/test_models.rb
+    app/app_delegate.rb
   }
   app.frameworks += %w{ CoreData }
 
