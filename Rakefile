@@ -28,18 +28,7 @@ Motion::Project::App.setup do |app|
   app.vendor_project('vendor/motion_data/ext', :static)
 end
 
-task 'spec' do
-  # This addition to the 'spec' task will close the simulator after tests run
-  # if there are no errors
-  sh "osascript -e 'tell application \"iphone simulator\" to quit'"
-end
-
-namespace :spec do
-  desc "Auto-run specs"
-  task :kick do
-    sh "bundle exec kicker -c"
-  end
-end
+require 'motion-stump'
 
 namespace :schema do
 

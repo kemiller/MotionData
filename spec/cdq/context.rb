@@ -60,6 +60,19 @@ module CDQ
       @cc.current.parentContext.should == first
     end
 
+    it "saves all contexts" do
+      root = @cc.new(NSPrivateQueueConcurrencyType)
+      main = @cc.new(NSMainQueueConcurrencyType)
+      root_saved = false
+      main_saved = false
+      root.stub!(:save) { root_saved = true }
+      main.stub!(:save) { main_saved = true }
+      @cc.save
+
+      root_saved.should == true
+      main_saved.should == true
+    end
+
   end
 
 end

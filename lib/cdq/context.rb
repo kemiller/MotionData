@@ -68,6 +68,14 @@ module CDQ
       push(context, &block)
     end
 
+    # Save all contexts in the stack, starting with the current and working down.
+    #
+    def save
+      stack.reverse.each do |context|
+        context.save
+      end
+    end
+
     private
 
     def push_to_stack(value)
