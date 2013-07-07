@@ -1,10 +1,11 @@
-class Author < MotionData::ManagedObject
+class Author < CDQ::CDQManagedObject
 end
 
-class Article < MotionData::ManagedObject
-  scope :allPublished, where(:published => true)
-  scope :withTitle, where( value(:title) != nil ).sortBy(:title, ascending:false)
-  scope :publishedSince { |date| all.where(value(:publishedAt) > date) }
+class Article < CDQ::CDQManagedObject
+  #scope :all_published, where(:published => true)
+  scope :all_published, where(:published).eq(true)
+  scope :with_title, where(:title).ne(nil).sort_by(:title, :descending)
+  #scope :published_since { |date| all.where(value(:publishedAt) > date) }
 end
 
 class Writer < CDQ::CDQManagedObject

@@ -15,23 +15,23 @@ module CDQ
     end
 
     it "reflects a base state" do
-      tq = CDQTargetedQuery.new(Author.entityDescription, Author)
+      tq = CDQTargetedQuery.new(Author.entity_description, Author)
       tq.count.should == 0
       tq.array.should == []
     end
 
     it "can count objects" do
-      tq = CDQTargetedQuery.new(Author.entityDescription, Author)
-      Author.new(name: "eecummings")
+      tq = CDQTargetedQuery.new(Author.entity_description, Author)
+      Author.create(name: "eecummings")
       tq.count.should == 1
-      Author.new(name: "T. S. Eliot")
+      Author.create(name: "T. S. Eliot")
       tq.count.should == 2
     end
 
     it "can fetch objects" do
-      tq = CDQTargetedQuery.new(Author.entityDescription, Author)
-      eecummings = Author.new(name: "eecummings")
-      tseliot = Author.new(name: "T. S. Eliot")
+      tq = CDQTargetedQuery.new(Author.entity_description, Author)
+      eecummings = Author.create(name: "eecummings")
+      tseliot = Author.create(name: "T. S. Eliot")
       tq.array.sort_by(&:name).should == [tseliot, eecummings]
     end
 
@@ -44,9 +44,9 @@ module CDQ
 
       before do
         @tq = cdq(Author)
-        @eecummings = Author.new(name: "eecummings")
-        @tseliot = Author.new(name: "T. S. Eliot")
-        @dante = Author.new(name: "dante")
+        @eecummings = Author.create(name: "eecummings")
+        @tseliot = Author.create(name: "T. S. Eliot")
+        @dante = Author.create(name: "dante")
         MotionData.saveAll
       end
 
