@@ -4,7 +4,19 @@ module CDQ
   describe "CDQ Context Manager" do
 
     before do
-      @cc = CDQContextManager.new(store: MotionData::StoreCoordinator.default)
+      MotionData.setupCoreDataStack
+
+      class << self
+        include CDQ
+      end
+    end
+
+    after do
+      MotionData.resetCoreDataStack
+    end
+
+    before do
+      @cc = CDQContextManager.new(store_coordinator: MotionData::StoreCoordinator.default)
       @context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSPrivateQueueConcurrencyType)
     end
 
@@ -34,6 +46,18 @@ module CDQ
         @cc.current.should == nil
       end
       @cc.current.should == @context
+    end
+
+    it "can create a new context and push it to the top of the stack" do
+      first = @cc.new(NSPrivateQueueConcurrencyType)
+      @cc.current.should.not == nil
+      @cc.current.concurrencyType.should == NSPrivateQueueConcurrencyType
+      @cc.current.parentContext.should == nil
+      @cc.current.persistentStoreCoordinator.should.not == nil
+      @cc.new(NSMainQueueConcurrencyType)
+      @cc.current.should.not == nil
+      @cc.current.concurrencyType.should == NSMainQueueConcurrencyType
+      @cc.current.parentContext.should == first
     end
 
   end

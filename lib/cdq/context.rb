@@ -3,6 +3,10 @@ module CDQ
 
   class CDQContextManager
 
+    def initialize(opts = {})
+      @store_coordinator = opts[:store_coordinator]
+    end
+
     # Push a new context onto the stack for the current thread, making that context the
     # default. If a block is supplied, push for the duration of the block and then
     # return to the previous state.
@@ -50,12 +54,26 @@ module CDQ
       self.stack = []
     end
 
+    # Create and push a new context with the specified concurrency type.  Its parent
+    # will be set to the previous head context.
+    #
+    def new(concurrency_type, &block)
+      context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
+      if current
+        context.parentContext = current
+      else
+        context.persistentStoreCoordinator = @store_coordinator
+      end
+      push(context, &block)
+    end
+
     private
 
     def push_to_stack(value)
       lstack = stack
       lstack << value
       self.stack = lstack
+      value
     end
 
     def pop_from_stack
