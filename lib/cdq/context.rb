@@ -55,7 +55,8 @@ module CDQ
     end
 
     # Create and push a new context with the specified concurrency type.  Its parent
-    # will be set to the previous head context.
+    # will be set to the previous head context.  If a block is supplied, the new context
+    # will exist for the duration of the block and then the previous state will be restored.
     #
     def new(concurrency_type, &block)
       context = NSManagedObjectContext.alloc.initWithConcurrencyType(concurrency_type)
