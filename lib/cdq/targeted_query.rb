@@ -3,6 +3,7 @@ module CDQ #:nodoc:
 
   class CDQObject #:nodoc:
   end
+
   class CDQQuery < CDQObject #:nodoc:
   end
 
@@ -10,10 +11,12 @@ module CDQ #:nodoc:
 
     include Enumerable
 
-    # Create a new CDQTargetedContext.  You should normally not need to do that directly.
+    # Create a new CDQTargetedContext.  Takes an entity description, an optional
+    # implementation class, and a hash of options that will be passed to the CDQQuery
+    # constructor.
     #
-    def initialize(target, target_class = NSManagedObject, opts = {})
-      @target = target
+    def initialize(entity_description, target_class = NSManagedObject, opts = {})
+      @entity_description = entity_description
       @target_class = target_class
       @context = opts.delete(:context)
       super(opts)
@@ -22,7 +25,7 @@ module CDQ #:nodoc:
     # The current context, taken from the environment or overriden by <tt>in_context</tt>
     #
     def context
-      @context || MotionData::Context.current
+      @context || contexts.current
     end
 
     # Return the number of matching entities.
@@ -30,6 +33,7 @@ module CDQ #:nodoc:
     # Causes execution.
     #
     def count
+      raise("No context has been set.  Probably need to run cdq.setup") unless context
       with_error_object(0) do |error|
         context.countForFetchRequest(fetch_request, error:error)
       end
@@ -40,6 +44,7 @@ module CDQ #:nodoc:
     # Causes execution.
     #
     def array
+      raise("No context has been set.  Probably need to run cdq.setup") unless context
       with_error_object([]) do |error|
         context.executeFetchRequest(fetch_request, error:error)
       end
@@ -87,7 +92,8 @@ module CDQ #:nodoc:
     #
     def fetch_request
       super.tap do |req|
-        req.entity = @target
+        req.entity = @entity_description
+        req.predicate ||= NSPredicate.predicateWithValue(true)
       end
     end
 
@@ -95,7 +101,7 @@ module CDQ #:nodoc:
     # the newly-created entity.  Does not save the context.
     #
     def create(opts = {})
-      @target_class.alloc.initWithEntity(@target, insertIntoManagedObjectContext: context).tap do |entity|
+      @target_class.alloc.initWithEntity(@entity_description, insertIntoManagedObjectContext: context).tap do |entity|
         opts.each { |k, v| entity.send("#{k}=", v) }
       end
     end
@@ -131,20 +137,11 @@ module CDQ #:nodoc:
 
     def named_scopes
       @@named_scopes ||= {}
-      @@named_scopes[@target] ||= {}
+      @@named_scopes[@entity_description] ||= {}
     end
 
     def new(opts = {})
-      self.class.new(@target, @target_class, locals.merge(opts))
-    end
-
-    def with_error_object(default, &block)
-      error = Pointer.new(:object)
-      result = block.call(error)
-      if error[0]
-        raise "Error while fetching: #{error[0].debugDescription}"
-      end
-      result || default
+      self.class.new(@entity_description, @target_class, locals.merge(opts))
     end
 
   end

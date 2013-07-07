@@ -19,7 +19,7 @@ module CDQ
         end
         CDQTargetedQuery.new(entity_description, obj)
       else
-        raise "CDQ doesn't know what to do with #{obj}"
+        @@base_object ||= CDQObject.new
       end
     when String
       entity_description = MotionData.managedObjectModel.entitiesByName[obj]

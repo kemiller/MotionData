@@ -7,10 +7,6 @@ Motion::Project::App.setup do |app|
   app.files = %w{
     lib/motion_data/setup.rb
     lib/motion_data/store_coordinator.rb
-    lib/motion_data/context.rb
-    lib/motion_data/predicate.rb
-    lib/motion_data/managed_object.rb
-    lib/motion_data/scope.rb
 
     lib/cdq.rb
     lib/cdq/object.rb

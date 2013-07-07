@@ -16,7 +16,7 @@ module CDQ
     end
 
     it "should have a context method" do
-      cdq.context.class.should == CDQContextManager
+      cdq.contexts.class.should == CDQContextManager
     end
 
   end
