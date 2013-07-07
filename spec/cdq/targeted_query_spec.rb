@@ -3,11 +3,11 @@ module CDQ
   describe "CDQ Targeted Queries" do
 
     before do
-      MotionData.setupCoreDataStack
+      CDQ.cdq.setup
     end
 
     after do
-      MotionData.resetCoreDataStack
+      CDQ.cdq.reset!
     end
 
     it "reflects a base state" do
@@ -41,7 +41,7 @@ module CDQ
   describe "CDQ Targeted Queries with data" do
 
     before do
-      MotionData.setupCoreDataStack
+      CDQ.cdq.setup
 
       class << self
         include CDQ
@@ -55,7 +55,7 @@ module CDQ
     end
 
     after do
-      MotionData.resetCoreDataStack
+      CDQ.cdq.reset!
     end
 
     it "performs a sorted fetch" do

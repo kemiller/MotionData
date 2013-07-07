@@ -5,13 +5,10 @@ module MotionData
   def self.setupCoreDataStack(options = {})
     path = databasePath(options[:databaseName])
     StoreCoordinator.default = StoreCoordinator.onDiskStore(managedObjectModel(options[:modelName]), path)
-    cdq.contexts.new(NSPrivateQueueConcurrencyType)
-    cdq.contexts.new(NSMainQueueConcurrencyType)
   end
 
   def self.resetCoreDataStack(options = {})
     path = databasePath(options[:databaseName])
-    cdq.reset!
     NSFileManager.defaultManager.removeItemAtPath(path, error: nil)
   end
 

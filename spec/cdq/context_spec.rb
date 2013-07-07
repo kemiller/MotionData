@@ -4,7 +4,7 @@ module CDQ
   describe "CDQ Context Manager" do
 
     before do
-      MotionData.setupCoreDataStack
+      CDQ.cdq.setup
 
       class << self
         include CDQ
@@ -12,8 +12,9 @@ module CDQ
     end
 
     after do
-      MotionData.resetCoreDataStack
+      CDQ.cdq.reset!
     end
+
 
     before do
       @cc = CDQContextManager.new(store_coordinator: MotionData::StoreCoordinator.default)

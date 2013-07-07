@@ -4,7 +4,7 @@ module CDQ
   describe "CDQ Object" do
 
     before do
-      MotionData.setupCoreDataStack
+      CDQ.cdq.setup
 
       class << self
         include CDQ
@@ -12,7 +12,7 @@ module CDQ
     end
 
     after do
-      MotionData.resetCoreDataStack
+      CDQ.cdq.reset!
     end
 
     it "should have a context method" do

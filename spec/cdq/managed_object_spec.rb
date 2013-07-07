@@ -3,7 +3,7 @@ module CDQ
   describe "CDQ Managed Object" do
 
     before do
-      MotionData.setupCoreDataStack
+      CDQ.cdq.setup
 
       class << self
         include CDQ
@@ -11,7 +11,7 @@ module CDQ
     end
 
     after do
-      MotionData.resetCoreDataStack
+      CDQ.cdq.reset!
     end
 
     it "provides a cdq class method" do
