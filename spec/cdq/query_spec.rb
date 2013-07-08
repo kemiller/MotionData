@@ -44,6 +44,11 @@ module CDQ
       compound.predicate.predicateFormat.should == 'name BEGINSWITH "foo" AND name != "fool"'
     end
 
+    it "can 'and' itself with a hash" do
+      compound = @query.and(name: "foo", fee: 2)
+      compound.predicate.predicateFormat.should == 'name == "foo" AND fee == 2'
+    end
+
     it "starts a partial predicate when 'and'-ing a symbol" do
       ppred = @query.and(:name)
       ppred.class.should == CDQPartialPredicate
@@ -62,6 +67,12 @@ module CDQ
     it "can 'or' itself with an NSPredicate" do
       @compound = @query.or(NSPredicate.predicateWithValue(false))
       @compound.predicate.should == NSPredicate.predicateWithValue(false)
+    end
+
+    it "can 'or' itself with a string-based predicate query" do
+      query = @query.where(:name).begins_with('foo')
+      compound = query.or("name != %@", 'fool')
+      compound.predicate.predicateFormat.should == 'name BEGINSWITH "foo" OR name != "fool"'
     end
 
     it "can sort by a key" do

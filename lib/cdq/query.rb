@@ -30,22 +30,22 @@ module CDQ
       end
     end
 
-    # Combine this scope with others in an intersection ("and") relationship
-    def and(scope = nil, *args)
-      merge_scope(scope, :and, *args) do |left, right|
+    # Combine this query with others in an intersection ("and") relationship
+    def and(query = nil, *args)
+      merge_query(query, :and, *args) do |left, right|
         NSCompoundPredicate.andPredicateWithSubpredicates([left, right])
       end
     end
     alias_method :where, :and
 
-    # Combine this scope with others in a union ("or") relationship
-    def or(scope = nil, *args)
-      merge_scope(scope, :or, *args) do |left, right|
+    # Combine this query with others in a union ("or") relationship
+    def or(query = nil, *args)
+      merge_query(query, :or, *args) do |left, right|
         NSCompoundPredicate.orPredicateWithSubpredicates([left, right])
       end
     end
 
-    # Create a new scope with the same values as this one, optionally overriding
+    # Create a new query with the same values as this one, optionally overriding
     # any of them in the options
     def new(opts = {})
       self.class.new(locals.merge(opts))
@@ -79,11 +79,19 @@ module CDQ
 
     private
 
-    def merge_scope(scope, operation, *args, &block)
+    def merge_query(query, operation, *args, &block)
       key_to_save = nil
-      case scope
+      case query
+      when Hash
+        subquery = query.inject(CDQQuery.new) do |memo, (key, value)|
+          memo.and(key).eq(value)
+        end
+        other_predicate = subquery.predicate
+        new_limit = limit
+        new_offset = offset
+        new_sort_descriptors = sort_descriptors
       when Symbol
-        return CDQPartialPredicate.new(scope, self, operation)
+        return CDQPartialPredicate.new(query, self, operation)
       when NilClass
         if @saved_key
           return CDQPartialPredicate.new(@saved_key, self, operation)
@@ -91,18 +99,18 @@ module CDQ
           raise "Zero-argument 'and' and 'or' can only be used if there is a key in the preceding predicate"
         end
       when CDQQuery
-        new_limit = [limit, scope.limit].compact.last
-        new_offset = [offset, scope.offset].compact.last
-        new_sort_descriptors = sort_descriptors + scope.sort_descriptors
-        other_predicate = scope.predicate
+        new_limit = [limit, query.limit].compact.last
+        new_offset = [offset, query.offset].compact.last
+        new_sort_descriptors = sort_descriptors + query.sort_descriptors
+        other_predicate = query.predicate
       when NSPredicate
-        other_predicate = scope
+        other_predicate = query
         new_limit = limit
         new_offset = offset
         new_sort_descriptors = sort_descriptors
         key_to_save = args.first
       when String
-        other_predicate = NSPredicate.predicateWithFormat(scope, argumentArray: args)
+        other_predicate = NSPredicate.predicateWithFormat(query, argumentArray: args)
         new_limit = limit
         new_offset = offset
         new_sort_descriptors = sort_descriptors
