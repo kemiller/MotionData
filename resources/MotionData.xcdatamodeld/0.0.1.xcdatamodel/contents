@@ -17,4 +17,7 @@
     <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
     <attribute optional="YES" syncable="YES" attributeType="Float" name="fee" defaultValueString="0.0"/>
   </entity>
+  <entity name="Publisher" syncable="YES">
+    <attribute optional="NO" syncable="YES" attributeType="String" name="name"/>
+  </entity>
 </model>

@@ -36,6 +36,7 @@ module CDQ
       maya = tq.create(name: "maya angelou")
       tq.where(:name).eq("maya angelou").first.should == maya
     end
+
   end
 
   describe "CDQ Targeted Query with data" do

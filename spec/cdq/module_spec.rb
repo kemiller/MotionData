@@ -34,6 +34,10 @@ module CDQ
       Author.cdq.class.should == CDQTargetedQuery
     end
 
+    it "works with entities that do not have a specific implementation class" do
+      cdq('Publisher').class.should == CDQTargetedQuery
+    end
+
   end
 
 end

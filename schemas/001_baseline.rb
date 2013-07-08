@@ -23,4 +23,8 @@ schema "0.0.1" do
     float :fee
   end
 
+  entity "Publisher" do # No class for this one
+    string :name, optional: false
+  end
+
 end

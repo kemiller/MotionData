@@ -15,7 +15,7 @@ module CDQ #:nodoc:
     # implementation class, and a hash of options that will be passed to the CDQQuery
     # constructor.
     #
-    def initialize(entity_description, target_class = NSManagedObject, opts = {})
+    def initialize(entity_description, target_class = CDQManagedObject, opts = {})
       @entity_description = entity_description
       @target_class = target_class
       @context = opts.delete(:context)

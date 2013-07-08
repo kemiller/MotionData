@@ -42,6 +42,14 @@ module CDQ
       Writer.all.array.should == []
     end
 
+    it "works with entities that do not have a specific implementation class" do
+      rh = cdq('Publisher').create(name: "Random House")
+      cdq('Publisher').where(:name).include("Random").first.should == rh
+      rh.destroy
+      cdq.save
+      cdq('Publisher').where(:name).include("Random").first.should == nil
+    end
+
     describe "CDQ Managed Object scopes" do
 
       before do
