@@ -1,42 +1,18 @@
+Motion::Project::App.setup do |app|
 
-module CDQ
+  app.files.unshift(File.join(File.dirname(__FILE__), "../motion/cdq.rb"))
 
-  class CDQObject; end
-  class CDQQuery < CDQObject; end
-  class CDQPartialPredicate < CDQObject; end
-  class CDQTargetedQuery < CDQQuery; end
+  %w{
+    object.rb
+    context.rb
+    store.rb
+    model.rb
+    partial_predicate.rb
+    query.rb
+    targeted_query.rb
+    managed_object.rb
+  }.map { |f| File.join(File.dirname(__FILE__), "../motion/cdq/#{f}") }.each { |f| app.files.unshift(f) }
 
-  extend self
-
-  def cdq(obj = nil)
-    obj ||= self
-
-    @@base_object ||= CDQObject.new
-
-    case obj
-    when Class
-      if obj.isSubclassOfClass(NSManagedObject)
-        entity_description = @@base_object.models.current.entitiesByName[obj.name]
-        if entity_description.nil?
-          raise "Cannot find an entity named #{obj.name}"
-        end
-        CDQTargetedQuery.new(entity_description, obj)
-      else
-        @@base_object
-      end
-    when String
-      entity_description = @@base_object.models.current.entitiesByName[obj]
-      if entity_description.nil?
-        raise "Cannot find an entity named #{obj}"
-      end
-      CDQTargetedQuery.new(entity_description)
-    when Symbol
-      CDQPartialPredicate.new(obj, CDQQuery.new)
-    when CDQObject
-      obj
-    else
-      @@base_object
-    end
-  end
-
+  app.frameworks += %w{ CoreData }
+  app.vendor_project(File.expand_path(File.join(File.dirname(__FILE__), "../vendor/motion_data/ext")), :static)
 end
