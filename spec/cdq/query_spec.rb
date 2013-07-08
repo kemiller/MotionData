@@ -38,6 +38,12 @@ module CDQ
       @compound.predicate.should == NSPredicate.predicateWithValue(false)
     end
 
+    it "can 'and' itself with a string-based predicate query" do
+      query = @query.where(:name).begins_with('foo')
+      compound = query.and("name != %@", 'fool')
+      compound.predicate.predicateFormat.should == 'name BEGINSWITH "foo" AND name != "fool"'
+    end
+
     it "starts a partial predicate when 'and'-ing a symbol" do
       ppred = @query.and(:name)
       ppred.class.should == CDQPartialPredicate

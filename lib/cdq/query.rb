@@ -31,16 +31,16 @@ module CDQ
     end
 
     # Combine this scope with others in an intersection ("and") relationship
-    def and(scope = nil, key_to_save = nil)
-      merge_scope(scope, :and, key_to_save) do |left, right|
+    def and(scope = nil, *args)
+      merge_scope(scope, :and, *args) do |left, right|
         NSCompoundPredicate.andPredicateWithSubpredicates([left, right])
       end
     end
     alias_method :where, :and
 
     # Combine this scope with others in a union ("or") relationship
-    def or(scope = nil, key_to_save = nil)
-      merge_scope(scope, :or, key_to_save) do |left, right|
+    def or(scope = nil, *args)
+      merge_scope(scope, :or, *args) do |left, right|
         NSCompoundPredicate.orPredicateWithSubpredicates([left, right])
       end
     end
@@ -79,7 +79,8 @@ module CDQ
 
     private
 
-    def merge_scope(scope, operation, key_to_save, &block)
+    def merge_scope(scope, operation, *args, &block)
+      key_to_save = nil
       case scope
       when Symbol
         return CDQPartialPredicate.new(scope, self, operation)
@@ -96,6 +97,12 @@ module CDQ
         other_predicate = scope.predicate
       when NSPredicate
         other_predicate = scope
+        new_limit = limit
+        new_offset = offset
+        new_sort_descriptors = sort_descriptors
+        key_to_save = args.first
+      when String
+        other_predicate = NSPredicate.predicateWithFormat(scope, argumentArray: args)
         new_limit = limit
         new_offset = offset
         new_sort_descriptors = sort_descriptors
