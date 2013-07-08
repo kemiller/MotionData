@@ -32,7 +32,7 @@ module CDQ
       # Shortcut to look up the entity description for this class
       #
       def entity_description
-        MotionData.managedObjectModel.entitiesByName[name]
+        cdq.models.current.entitiesByName[name]
       end
 
       # Creates a CDQ scope, but also defines a method on the class that returns the 

@@ -23,6 +23,11 @@ module CDQ
       cdq.stores.class.should == CDQStoreManager
     end
 
+    it "has a models method" do
+      cdq.models.class.should == CDQModelManager
+    end
+
+
   end
 
 end

@@ -8,7 +8,11 @@ module CDQ
     end
 
     def stores
-      @@store_manager ||= CDQStoreManager.new(model: MotionData.managedObjectModel)
+      @@store_manager ||= CDQStoreManager.new(model: models.current)
+    end
+
+    def models
+      @@model_manager ||= CDQModelManager.new
     end
 
     def reset!(opts = {})

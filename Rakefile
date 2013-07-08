@@ -5,12 +5,10 @@ Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'MotionData'
   app.files = %w{
-    lib/motion_data/setup.rb
-    lib/motion_data/store_coordinator.rb
-
     lib/cdq.rb
     lib/cdq/object.rb
     lib/cdq/context.rb
+    lib/cdq/model.rb
     lib/cdq/partial_predicate.rb
     lib/cdq/query.rb
     lib/cdq/store.rb

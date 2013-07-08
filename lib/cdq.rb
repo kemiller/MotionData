@@ -10,19 +10,22 @@ module CDQ
 
   def cdq(obj = nil)
     obj ||= self
+
+    @@base_object ||= CDQObject.new
+
     case obj
     when Class
       if obj.isSubclassOfClass(NSManagedObject)
-        entity_description = MotionData.managedObjectModel.entitiesByName[obj.name]
+        entity_description = @@base_object.models.current.entitiesByName[obj.name]
         if entity_description.nil?
           raise "Cannot find an entity named #{obj.name}"
         end
         CDQTargetedQuery.new(entity_description, obj)
       else
-        @@base_object ||= CDQObject.new
+        @@base_object
       end
     when String
-      entity_description = MotionData.managedObjectModel.entitiesByName[obj]
+      entity_description = @@base_object.models.current.entitiesByName[obj]
       if entity_description.nil?
         raise "Cannot find an entity named #{obj}"
       end
@@ -32,7 +35,7 @@ module CDQ
     when CDQObject
       obj
     else
-      @@base_object ||= CDQObject.new
+      @@base_object
     end
   end
 

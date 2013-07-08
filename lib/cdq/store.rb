@@ -26,23 +26,23 @@ module CDQ
     end
 
     def create_store
-        coordinator = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(@model)
-        error = Pointer.new(:object)
-        options = { NSMigratePersistentStoresAutomaticallyOption => true,
-                    NSInferMappingModelAutomaticallyOption => true }
-        url = NSURL.fileURLWithPath(@database_path)
-        store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
-                                         configuration:nil,
-                                                   URL:url,
-                                               options:options,
-                                                 error:error)
-        if store.nil?
-          error[0].userInfo['metadata'] && error[0].userInfo['metadata'].each do |key, value|
-            puts "#{key}: #{value}"
-          end
-          raise error[0].userInfo['reason']
+      coordinator = NSPersistentStoreCoordinator.alloc.initWithManagedObjectModel(@model)
+      error = Pointer.new(:object)
+      options = { NSMigratePersistentStoresAutomaticallyOption => true,
+                  NSInferMappingModelAutomaticallyOption => true }
+      url = NSURL.fileURLWithPath(@database_path)
+      store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType,
+                                                     configuration:nil,
+                                                     URL:url,
+                                                     options:options,
+                                                     error:error)
+      if store.nil?
+        error[0].userInfo['metadata'] && error[0].userInfo['metadata'].each do |key, value|
+          puts "#{key}: #{value}"
         end
-        coordinator
+        raise error[0].userInfo['reason']
+      end
+      coordinator
     end
   end
 
