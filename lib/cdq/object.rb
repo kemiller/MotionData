@@ -23,6 +23,10 @@ module CDQ
       contexts.new(NSMainQueueConcurrencyType)
     end
 
+    def save
+      contexts.save
+    end
+
     protected
 
     def with_error_object(default, &block)

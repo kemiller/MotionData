@@ -1,6 +1,6 @@
 
 module CDQ
-  describe "CDQ Targeted Queries" do
+  describe "CDQ Targeted Query" do
 
     before do
       CDQ.cdq.setup
@@ -38,7 +38,7 @@ module CDQ
     end
   end
 
-  describe "CDQ Targeted Queries with data" do
+  describe "CDQ Targeted Query with data" do
 
     before do
       CDQ.cdq.setup
@@ -51,7 +51,7 @@ module CDQ
       @eecummings = Author.create(name: "eecummings")
       @tseliot = Author.create(name: "T. S. Eliot")
       @dante = Author.create(name: "dante")
-      cdq.contexts.save
+      cdq.save
     end
 
     after do
