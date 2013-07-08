@@ -3,7 +3,7 @@ require 'motion/project/template/ios'
 
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
-  app.name = 'MotionData'
+  app.name = 'CDQ'
   app.files = %w{
     motion/cdq.rb
     motion/cdq/object.rb
@@ -19,8 +19,6 @@ Motion::Project::App.setup do |app|
     app/app_delegate.rb
   }
   app.frameworks += %w{ CoreData }
-
-  app.vendor_project('vendor/motion_data/ext', :static)
 end
 
 require 'motion-stump'

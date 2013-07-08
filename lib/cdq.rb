@@ -1,3 +1,8 @@
+
+unless defined?(Motion::Project::App)
+  raise "This must required from within a RubyMotion Rakefile"
+end
+
 Motion::Project::App.setup do |app|
 
   app.files.unshift(File.join(File.dirname(__FILE__), "../motion/cdq.rb"))
@@ -14,5 +19,4 @@ Motion::Project::App.setup do |app|
   }.map { |f| File.join(File.dirname(__FILE__), "../motion/cdq/#{f}") }.each { |f| app.files.unshift(f) }
 
   app.frameworks += %w{ CoreData }
-  app.vendor_project(File.expand_path(File.join(File.dirname(__FILE__), "../vendor/motion_data/ext")), :static)
 end
