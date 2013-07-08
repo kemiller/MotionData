@@ -13,6 +13,7 @@ Motion::Project::App.setup do |app|
     lib/cdq/context.rb
     lib/cdq/partial_predicate.rb
     lib/cdq/query.rb
+    lib/cdq/store.rb
     lib/cdq/targeted_query.rb
     lib/cdq/managed_object.rb
 

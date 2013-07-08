@@ -4,21 +4,21 @@ module CDQ
   class CDQObject
 
     def contexts
-      @@context_manager ||= CDQContextManager.new(store_coordinator: store_coordinator)
+      @@context_manager ||= CDQContextManager.new(store_coordinator: stores.current)
     end
 
-    def store_coordinator
-      MotionData::StoreCoordinator.default
+    def stores
+      @@store_manager ||= CDQStoreManager.new(model: MotionData.managedObjectModel)
     end
 
     def reset!(opts = {})
       @@context_manager.reset!
       @@context_manager = nil
-      MotionData.resetCoreDataStack(opts)
+      @@store_manager.reset!
+      @@store_manager = nil
     end
 
     def setup(opts = {})
-      MotionData.setupCoreDataStack(opts)
       contexts.new(NSPrivateQueueConcurrencyType)
       contexts.new(NSMainQueueConcurrencyType)
     end

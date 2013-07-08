@@ -15,8 +15,12 @@ module CDQ
       CDQ.cdq.reset!
     end
 
-    it "should have a context method" do
+    it "has a contexts method" do
       cdq.contexts.class.should == CDQContextManager
+    end
+
+    it "has a stores method" do
+      cdq.stores.class.should == CDQStoreManager
     end
 
   end

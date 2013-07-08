@@ -17,7 +17,7 @@ module CDQ
 
 
     before do
-      @cc = CDQContextManager.new(store_coordinator: MotionData::StoreCoordinator.default)
+      @cc = CDQContextManager.new(store_coordinator: cdq.stores.current)
       @context = NSManagedObjectContext.alloc.initWithConcurrencyType(NSPrivateQueueConcurrencyType)
     end
 
