@@ -26,6 +26,7 @@ module CDQ
   class CDQManagedObject < NSManagedObject
 
     extend CDQ
+    include CDQ
 
     class << self
 
@@ -51,6 +52,13 @@ module CDQ
         cdq.send(name, *args)
       end
 
+    end
+
+    # Register this object for destruction with the current context.  Will not
+    # actually be removed until the context is saved.
+    #
+    def destroy
+      managedObjectContext.deleteObject(self)
     end
 
   end

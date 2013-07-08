@@ -36,17 +36,32 @@ module CDQ
       Writer.all.array.should == [eec]
     end
 
-    it "can save scopes" do
-      class Writer
-        scope :eecummings, where(:name).eq('eecummings')
-        scope :edgaralpoe, where(:name).eq('edgar allen poe')
-      end
+    it "can destroy itself" do
       eec = cdq(Writer).create(name: 'eecummings')
-      poe = cdq(Writer).create(name: 'edgar allen poe')
-      Writer.eecummings.array.should == [eec]
-      Writer.edgaralpoe.array.should == [poe]
-      Writer.cdq.eecummings.array.should == [eec]
-      Writer.cdq.edgaralpoe.array.should == [poe]
+      eec.destroy
+      Writer.all.array.should == []
+    end
+
+    describe "CDQ Managed Object scopes" do
+
+      before do
+        class Writer
+          scope :eecummings, where(:name).eq('eecummings')
+          scope :edgaralpoe, where(:name).eq('edgar allen poe')
+        end
+        @eec = cdq(Writer).create(name: 'eecummings')
+        @poe = cdq(Writer).create(name: 'edgar allen poe')
+      end
+
+      it "defines scopes straight on the class object" do
+        Writer.eecummings.array.should == [@eec]
+        Writer.edgaralpoe.array.should == [@poe]
+      end
+        
+      it "also defines scopes on the cdq object" do
+        Writer.cdq.eecummings.array.should == [@eec]
+        Writer.cdq.edgaralpoe.array.should == [@poe]
+      end
     end
   end
 end

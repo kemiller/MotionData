@@ -27,7 +27,6 @@ module CDQ
       cdq.models.class.should == CDQModelManager
     end
 
-
   end
 
 end
